@@ -48,7 +48,7 @@ public class LoginPage implements Handler<Response> {
         } else if (request.getMethod().equals("POST")) {
             doLogin(response);
         } else {
-            response.setStatus(405);
+            response.end(405);
         }
     }
 
@@ -57,47 +57,56 @@ public class LoginPage implements Handler<Response> {
 
         MediaType contentType = request.getContentType();
         if (contentType.isJson()) {
-            request.json(new Handler<JsonObject>() {
-                public void handle(JsonObject jsonRequest) {
-                    Map<String, Object> jsonResult = new HashMap<>();
-                    try {
-                        Subject subject = doLogin(response, jsonRequest.getString("username"), jsonRequest.getString("password"));
-                        jsonResult.put("success", true);
-                        jsonResult.put("username", subject.getPrincipal());
-                        response.renderJson(jsonResult);
-                    } catch (AuthenticationException e1) {
-                        jsonResult.put("success", false);
-                        jsonResult.put("failure", e1.getMessage());
-                        response.renderJson(jsonResult);
-                    }
-                }
-            });
+            doJsonLogin(response, request);
         } else if (contentType.isForm()) {
-            request.form(new Handler<Map<String, ?>>() {
-                public void handle(Map<String, ?> params) {
-                    try {
-                        doLogin(response, params.get("username").toString(), params.get("password").toString());
-                        response.redirect("/");
-                    } catch (AuthenticationException e) {
-                        response.redirect("login?failure=" + e.getMessage());
-                    }
-                }
-            });
+            doFormLogin(response, request);
+        } else {
+            response.end(415);
         }
+    }
 
+    private void doFormLogin(final Response response, Request request) {
+        request.form(new Handler<Map<String, ?>>() {
+            public void handle(Map<String, ?> params) {
+                try {
+                    doLogin(response, params.get("username").toString(), params.get("password").toString());
+                    response.redirect("/");
+                } catch (AuthenticationException e) {
+                    response.redirect("login?failure=" + e.getMessage());
+                }
+            }
+        });
+    }
+
+    private void doJsonLogin(final Response response, Request request) {
+        request.json(new Handler<JsonObject>() {
+            public void handle(JsonObject jsonRequest) {
+                Map<String, Object> jsonResult = new HashMap<>();
+                try {
+                    Subject subject = doLogin(response, jsonRequest.getString("username"), jsonRequest.getString("password"));
+                    jsonResult.put("success", true);
+                    jsonResult.put("username", subject.getPrincipal());
+                    response.renderJson(jsonResult);
+                } catch (AuthenticationException e1) {
+                    jsonResult.put("success", false);
+                    jsonResult.put("failure", e1.getMessage());
+                    response.renderJson(jsonResult);
+                }
+            }
+        });
     }
 
     private Subject doLogin(Response response, String username, String password) throws AuthenticationException {
         AuthenticationToken token = new UsernamePasswordToken(username, password);
         Subject subject = subjectFactory.create(username, response);
+        JsonObject message = new JsonObject().putString("username", username);
         try {
             securityManager.login(subject, token);
             Session session = response.getRequest().getSession();
-            System.out.println("Putting subject in session " + session.getId());
             session.put("subject", subject);
-            eventBus.publish("auth.login.success", new JsonObject().putString("username", username));
+            eventBus.publish("auth.login.success", message);
         } catch (AuthenticationException e) {
-            eventBus.publish("auth.login.failure", new JsonObject().putString("username", username).putString("failure", e.getMessage()));
+            eventBus.publish("auth.login.failure", message.putString("failure", e.getMessage()));
             throw e;
         }
         return subject;

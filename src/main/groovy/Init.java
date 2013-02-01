@@ -6,6 +6,7 @@ import org.vertx.java.core.http.HttpServer;
 import org.vertx.java.core.json.JsonArray;
 import org.vertx.java.core.json.JsonObject;
 import org.vertx.java.core.sockjs.SockJSServer;
+import shiro.DatabaseServer;
 import shiro.TransientLdapServer;
 
 import java.io.File;
@@ -24,14 +25,14 @@ public class Init implements Handler<RatpackApp> {
         JsonArray allowedIn = new JsonArray();
         JsonArray allowedOut = new JsonArray();
         allowedOut.add(new JsonObject().putString("address_re", "auth\\..+")); // any auth messages
-
         sockJSServer.bridge(bridgeConf, allowedIn, allowedOut);
 
-        AuthListener authListener = new AuthListener();
-        vertx.eventBus().registerHandler("auth.login.success", authListener);
-        vertx.eventBus().registerHandler("auth.login.failure", authListener);
-        vertx.eventBus().registerHandler("auth.logout", authListener);
+        // register a server side listener, just for fun, just logs
+        new AuthListener(vertx.eventBus());
 
+        // Start the ldap and jdbc servers
         new TransientLdapServer(new File("ldapWork"), new File("ldif")).start();
+        new DatabaseServer().start();
     }
+
 }

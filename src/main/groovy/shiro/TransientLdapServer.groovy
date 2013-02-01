@@ -10,6 +10,9 @@ import org.apache.directory.shared.ldap.ldif.LdifReader
 import org.apache.directory.shared.ldap.ldif.LdifUtils
 import org.apache.directory.shared.ldap.name.LdapDN
 
+/**
+ * Just an embedded ldap directory, loads ldif data in src/ratpack/ldif
+ */
 class TransientLdapServer {
     final static ldifFileNameFilter = [accept: { File dir, String name -> name.endsWith(".ldif") }] as FilenameFilter
 
