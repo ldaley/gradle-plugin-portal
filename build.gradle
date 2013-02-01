@@ -4,7 +4,7 @@ buildscript {
     mavenCentral()
   }
   dependencies {
-    classpath 'org.ratpack-framework.vertx:ratpack-gradle-plugin:0.7.0-SNAPSHOT'
+    classpath "org.ratpack-framework.vertx:ratpack-gradle-plugin:0.7.0-SNAPSHOT"
   }
 }
 
@@ -31,8 +31,12 @@ idea {
 dependencies {
     springloaded "org.springsource.springloaded:springloaded-core:1.1.1"
     compile "org.apache.shiro:shiro-core:1.2.1"
+
+    compile 'org.apache.directory.server:apacheds-core:1.5.4',
+            'org.apache.directory.server:apacheds-protocol-ldap:1.5.4'
+
 }
 
 task wrapper(type: Wrapper) {
-  gradleVersion = '1.4'
+  gradleVersion = "1.4"
 }

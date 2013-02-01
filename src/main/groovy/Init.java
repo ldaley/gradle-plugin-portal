@@ -6,6 +6,9 @@ import org.vertx.java.core.http.HttpServer;
 import org.vertx.java.core.json.JsonArray;
 import org.vertx.java.core.json.JsonObject;
 import org.vertx.java.core.sockjs.SockJSServer;
+import shiro.TransientLdapServer;
+
+import java.io.File;
 
 public class Init implements Handler<RatpackApp> {
 
@@ -28,5 +31,7 @@ public class Init implements Handler<RatpackApp> {
         vertx.eventBus().registerHandler("auth.login.success", authListener);
         vertx.eventBus().registerHandler("auth.login.failure", authListener);
         vertx.eventBus().registerHandler("auth.logout", authListener);
+
+        new TransientLdapServer(new File("ldapWork"), new File("ldif")).start();
     }
 }

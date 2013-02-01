@@ -1,5 +1,5 @@
 $(function() {
-    $(".btn-info").click(function() {
+    $(".ajax-sign-in").click(function() {
          var button = $(this);
 
         function onLogin(data) {
@@ -34,5 +34,10 @@ $(function() {
           error: onFailure
         });
         return false;
+    });
+
+    $("button.event-log").click(function() {
+      window.open("/events","event log", 'height=400,width=400', false);
+      return false;
     });
 });

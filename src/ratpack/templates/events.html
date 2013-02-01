@@ -1,7 +1,15 @@
-<h2>Auth Events</h2>
-<p>Keep this window open, and log in and log out in another window.</p>
-<p>The events will show below.</p>
-<ol id="events"/>
-<script src="http://cdn.sockjs.org/sockjs-0.3.min.js"></script>
-<script src="/static/js/vertxbus.js"></script>
-<script src="/static/js/events.js"></script>
+<!doctype html>
+<html lang="en">
+<head>
+    <meta charset="utf-8">
+    <title><%= model.title %></title>
+    <script src="http://code.jquery.com/jquery-latest.js"></script>
+    <script src="http://cdn.sockjs.org/sockjs-0.3.min.js"></script>
+    <script src="/static/js/vertxbus.js"></script>
+    <script src="/static/js/events.js"></script>
+</head>
+<body>
+<p>Login events are sent here over the Vertx message bus.</p>
+<pre></pre>
+</body>
+</html>
