@@ -1,0 +1,16 @@
+<!doctype html>
+<html lang="en">
+<head>
+    <meta charset="utf-8">
+    <title><%= model.title %></title>
+    <link rel="stylesheet" href="/static/bootstrap/css/bootstrap.css" media="screen">
+    <link rel="stylesheet" href="/static/css/style.css" media="screen">
+    <script src="http://code.jquery.com/jquery-latest.js"></script>
+    <script src="/static/bootstrap/js/bootstrap.min.js"></script>
+</head>
+<body>
+<div class="container well">
+    <% render model.content.toString() %>
+</div>
+</body>
+</html>

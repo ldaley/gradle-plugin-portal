@@ -1,0 +1,38 @@
+buildscript {
+  repositories {
+    maven { url "https://oss.sonatype.org/content/repositories/snapshots/" }
+    mavenCentral()
+  }
+  dependencies {
+    classpath 'org.ratpack-framework.vertx:ratpack-gradle-plugin:0.7.0-SNAPSHOT'
+  }
+}
+
+repositories {
+  maven { url "https://oss.sonatype.org/content/repositories/snapshots/" }
+  mavenCentral()
+  maven { url "http://repo.springsource.org/repo" }
+}
+
+apply plugin: "ratpack"
+
+run {
+    systemProperty "org.vertx.logger-delegate-factory-class-name", "org.vertx.java.core.logging.impl.Log4jLogDelegateFactory"
+}
+
+apply plugin: "idea"
+idea {
+    project {
+        jdkName "1.7"
+        languageLevel "1.7"
+    }
+}
+
+dependencies {
+    springloaded "org.springsource.springloaded:springloaded-core:1.1.1"
+    compile "org.apache.shiro:shiro-core:1.2.1"
+}
+
+task wrapper(type: Wrapper) {
+  gradleVersion = '1.4'
+}

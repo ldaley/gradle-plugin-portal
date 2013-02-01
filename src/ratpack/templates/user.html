@@ -1,0 +1,6 @@
+<%
+  import org.apache.shiro.subject.Subject
+  Subject subject = model.subject
+%>
+<h2>Welcome ${subject.principal}!</h2>
+<a class="btn btn-primary" href="/logout">Logout</a>
