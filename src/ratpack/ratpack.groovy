@@ -46,6 +46,8 @@ import shiro.SubjectFactory
     SecurityManager securityManager = new DefaultSecurityManager([literalRealm, ldapRealm, jdbcRealm, iniRealm])
     SubjectFactory subjectFactory = new SubjectFactory(securityManager)
 
+    // Start of routes
+
     get("/", new FrontPage())
     get("/user", new UserPage(securityManager))
     all("/login", new LoginPage(securityManager, subjectFactory, vertx.eventBus()))
