@@ -1,3 +1,5 @@
+package shiro;
+
 import org.apache.shiro.mgt.SecurityManager;
 import org.apache.shiro.subject.SimplePrincipalCollection;
 import org.apache.shiro.subject.Subject;

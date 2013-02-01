@@ -1,3 +1,4 @@
+import events.AuthListener;
 import org.ratpackframework.app.RatpackApp;
 import org.vertx.java.core.Handler;
 import org.vertx.java.core.Vertx;

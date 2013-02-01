@@ -1,3 +1,6 @@
+import http.FrontPage
+import http.LoginPage
+import http.UserPage
 import org.apache.shiro.mgt.DefaultSecurityManager
 import org.apache.shiro.mgt.SecurityManager
 import org.apache.shiro.realm.SimpleAccountRealm
@@ -5,6 +8,7 @@ import org.apache.shiro.subject.Subject
 import org.ratpackframework.groovy.Request
 import org.ratpackframework.groovy.ClosureRouting
 import org.vertx.java.core.json.JsonObject
+import shiro.SubjectFactory
 
 (this as ClosureRouting).with {
 
@@ -18,6 +22,7 @@ import org.vertx.java.core.json.JsonObject
     get("/", new FrontPage())
     get("/user", new UserPage(securityManager))
     all("/login", new LoginPage(securityManager, subjectFactory, vertx.eventBus()))
+
     get("/events") { render "skin.html", content: "events.html", title: "Events" }
 
     get("/logout") { Request request ->

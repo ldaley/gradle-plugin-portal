@@ -1,3 +1,5 @@
+package http;
+
 import org.apache.shiro.authc.AuthenticationException;
 import org.apache.shiro.authc.AuthenticationToken;
 import org.apache.shiro.authc.UsernamePasswordToken;
@@ -10,6 +12,7 @@ import org.ratpackframework.session.Session;
 import org.vertx.java.core.Handler;
 import org.vertx.java.core.eventbus.EventBus;
 import org.vertx.java.core.json.JsonObject;
+import shiro.SubjectFactory;
 
 import java.util.HashMap;
 import java.util.Map;

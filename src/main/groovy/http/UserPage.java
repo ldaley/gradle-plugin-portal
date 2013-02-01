@@ -1,3 +1,5 @@
+package http;
+
 import org.apache.shiro.mgt.*;
 import org.apache.shiro.mgt.SecurityManager;
 import org.apache.shiro.subject.Subject;
