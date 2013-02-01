@@ -41,3 +41,11 @@ go to /events in another tab.
 ## What's next
 
 Some playing with perms and roles.
+
+## SpringLoaded stacktraces
+
+If you see something like
+
+    SEVERE: Unexpected problem transforming call sites
+
+And a trace, you can ignore it. That's SpringLoaded (runtime class reloading) not playing nice with InvokeDynamic.
