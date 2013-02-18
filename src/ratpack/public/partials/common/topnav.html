@@ -4,14 +4,23 @@
             <a class="brand" href="#">{{projectName}}</a>
 
             <div class="nav-collapse collapse">
-                <p class="navbar-text pull-right">
-                    Logged in as <a href="#" class="navbar-link">Username</a>
-                </p>
+                <div class="pull-right">
+                    <div ng-show="user.loading">
+
+                    </div>
+                    <div ng-hide="user.loading">
+                        <button class="btn" ng-show="user.username == null" ng-click="doLogin()">Login</button>
+                        <p class="navbar-text" ng-hide="user.username == null">
+                            {{user.username}}
+                            <small>(<button class="btn-link btn-small logout" ng-click="logout()">logout</button></a>)</small>
+                        </p>
+                    </div>
+                </div>
                 <ul class="nav">
                     <li ng-repeat="n in nav" class="{{n.class}}"><a href="{{n.link}}">{{n.name}}</a></li>
                 </ul>
+
             </div>
-            <!--/.nav-collapse -->
         </div>
     </div>
 </div>

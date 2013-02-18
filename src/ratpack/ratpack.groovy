@@ -1,12 +1,11 @@
-import http.FrontPage
-import http.LoginPage
-import http.UserPage
-import org.ratpackframework.Request
-import org.ratpackframework.groovy.routing.ClosureRouting
-import user.AuthenticatableUser
+import app.CurrentUserInfoHandler
+import app.LoginHandler
+import app.LogoutHandler
+import org.ratpackframework.Routing
 
-(this as ClosureRouting).with {
+(this as Routing).with {
+    all("/data/current-user", CurrentUserInfoHandler)
 
-
-
+    post("/login", LoginHandler)
+    get("/logout", LogoutHandler)
 }

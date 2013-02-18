@@ -35,3 +35,7 @@ div.plugin:first-child {
 div.plugin *:first-child {
     margin-top: 0
 }
+
+button.logout {
+    padding: 0;
+}

@@ -1,12 +1,37 @@
 define([
-    'console', 'angular'
-], function (console, angular) {
+    'console', 'angular', 'services'
+], function (console, angular, services) {
     "use strict";
-    var module = angular.module("controllers", []);
+    var module = angular.module("controllers", ["services", 'ui.bootstrap.dialog']);
 
-    module.controller("main", function ($rootScope, $scope) {
-        $rootScope.title = "title";
-        $scope.val = "changed";
+    module.controller("main", function ($rootScope) {
+        $rootScope.title = "Gradle Plugins";
+    });
+
+    module.controller("login", function ($scope, dialog, $http, currentUser) {
+        $scope.foo = "bar";
+        $scope.request = {username: null, password: null, remember: true};
+        $scope.requesting = false;
+        $scope.cancel = function () {
+            dialog.close();
+            return false;
+        };
+
+        $scope.login = function () {
+            $scope.requesting = true;
+            $http.post("/login", $scope.request).
+                success(function (data, status, headers, config) {
+                    if (data.success) {
+                        currentUser.username = $scope.request.username;
+                    }
+                    $scope.requesting = false;
+                    dialog.close();
+                }).
+                error(function (data, status, headers, config) {
+                    $scope.requesting = false;
+                    dialog.close();
+                });
+        };
     });
 
     module.controller("leftnav", function ($scope) {
@@ -16,11 +41,20 @@ define([
         ]
     });
 
-    module.controller("topnav", function ($scope) {
+    module.controller("topnav", function ($scope, currentUser, $dialog) {
         $scope.projectName = "Gradle Plugins";
+        $scope.user = currentUser;
         $scope.nav = [
             {name: "Admin"}
         ];
+        $scope.doLogin = function () {
+            var d = $dialog.dialog({modalFade: true});
+            d.open("partials/login.html", "login");
+        };
+
+        $scope.logout = function() {
+            window.location = "/logout";
+        }
     });
 
     module.controller("plugins", function ($scope) {
