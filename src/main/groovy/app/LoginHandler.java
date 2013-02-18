@@ -1,5 +1,6 @@
 package app;
 
+import com.google.gson.JsonObject;
 import json.Json;
 import json.JsonBuilder;
 import org.ratpackframework.Handler;
@@ -39,10 +40,10 @@ public class LoginHandler implements Handler<Response> {
             public void handle(JsonBuilder json) {
                 try {
                     user.authenticate(authRequest.username, authRequest.password, authRequest.remember);
-                    json.property("success", true);
+                    json.name("success").value(true);
                 } catch (Exception e) {
-                    json.property("success", false);
-                    json.property("failure", e.getMessage());
+                    json.name("success").value(false);
+                    json.name("failure").value(e.getMessage());
                 }
             }
         });
@@ -55,11 +56,11 @@ public class LoginHandler implements Handler<Response> {
     }
 
     private AuthRequest extractRequest(Request request) {
-        Map<String, Object> incoming = json.object(request);
+        JsonObject incoming = json.object(request);
         AuthRequest authRequest = new AuthRequest();
-        authRequest.username = incoming.get("username").toString();
-        authRequest.password = incoming.get("password").toString();
-        authRequest.remember = (boolean) incoming.get("remember");
+        authRequest.username = incoming.get("username").getAsString();
+        authRequest.password = incoming.get("password").getAsString();
+        authRequest.remember = incoming.get("remember").getAsBoolean();
         return authRequest;
     }
 }

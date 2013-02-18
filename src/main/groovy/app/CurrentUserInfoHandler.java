@@ -24,7 +24,7 @@ public class CurrentUserInfoHandler implements Handler<Response> {
         Request request = response.getRequest();
         json.object(response, new Handler<JsonBuilder>() {
             public void handle(JsonBuilder json) {
-                json.property("username", user.getUsername());
+                json.name("username").value(user.getUsername());
             }
         });
     }
