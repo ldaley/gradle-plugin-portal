@@ -12,6 +12,7 @@ define([
         $scope.foo = "bar";
         $scope.request = {username: null, password: null, remember: true};
         $scope.requesting = false;
+        $scope.failure = null;
         $scope.cancel = function () {
             dialog.close();
             return false;
@@ -23,9 +24,11 @@ define([
                 success(function (data, status, headers, config) {
                     if (data.success) {
                         currentUser.username = $scope.request.username;
+                        dialog.close();
+                    } else {
+                        $scope.failure = data.failure;
                     }
                     $scope.requesting = false;
-                    dialog.close();
                 }).
                 error(function (data, status, headers, config) {
                     $scope.requesting = false;

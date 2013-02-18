@@ -42,7 +42,7 @@ public class LoginHandler implements Handler<Response> {
                     json.property("success", true);
                 } catch (Exception e) {
                     json.property("success", false);
-                    json.property("message", e.getMessage());
+                    json.property("failure", e.getMessage());
                 }
             }
         });
