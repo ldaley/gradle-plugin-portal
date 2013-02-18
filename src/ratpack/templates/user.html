@@ -1,6 +1,9 @@
 <%
-  import org.apache.shiro.subject.Subject
-  Subject subject = (Subject) model.subject
+import user.User
+User user = (User) model.user
 %>
-<h2>Welcome ${subject.principal}!</h2>
+<h2>Welcome ${user.username}!</h2>
+<% if (!user.authenticated) { %>
+<p>You are only remembered, not authenticated!</p>
+<% } %>
 <a class="btn btn-primary" href="/logout">Logout</a>

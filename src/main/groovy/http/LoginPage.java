@@ -1,55 +1,46 @@
 package http;
 
+import groovy.json.JsonOutput;
+import groovy.json.JsonSlurper;
 import org.apache.shiro.authc.AuthenticationException;
-import org.apache.shiro.authc.AuthenticationToken;
-import org.apache.shiro.authc.UsernamePasswordToken;
-import org.apache.shiro.mgt.SecurityManager;
-import org.apache.shiro.subject.Subject;
+import org.ratpackframework.Handler;
 import org.ratpackframework.Request;
 import org.ratpackframework.Response;
 import org.ratpackframework.http.MediaType;
-import org.ratpackframework.session.Session;
-import org.vertx.java.core.Handler;
-import org.vertx.java.core.eventbus.EventBus;
-import org.vertx.java.core.json.JsonObject;
-import shiro.SubjectFactory;
+import user.AuthenticatableUser;
 
+import javax.inject.Inject;
 import java.util.HashMap;
+import java.util.List;
 import java.util.Map;
 
 public class LoginPage implements Handler<Response> {
 
-    private final SecurityManager securityManager;
-    private final SubjectFactory subjectFactory;
-    private final EventBus eventBus;
-
-    public LoginPage(SecurityManager securityManager, SubjectFactory subjectFactory, EventBus eventBus) {
-        this.securityManager = securityManager;
-        this.subjectFactory = subjectFactory;
-        this.eventBus = eventBus;
-    }
+    @Inject
+    AuthenticatableUser user;
 
     @Override
     public void handle(Response response) {
         Request request = response.getRequest();
         if (request.getMethod().equals("GET")) {
-            Map<String, Object> model = new HashMap<>();
-            model.put("content", "login.html");
-            String failure = (String) response.getRequest().getQueryParams().get("failure");
-            if (failure != null) {
-                model.put("failure", failure);
-            }
-            boolean ajax = response.getRequest().getQueryParams().containsKey("ajax");
-            if (ajax) {
-                model.put("ajax", true);
-            }
-            model.put("title", "Login");
-            response.render(model, "skin.html");
+            doShowLogin(response);
         } else if (request.getMethod().equals("POST")) {
             doLogin(response);
         } else {
             response.end(405);
         }
+    }
+
+    private void doShowLogin(Response response) {
+        Map<String, Object> model = new HashMap<>();
+        model.put("content", "login.html");
+        List<String> failure = response.getRequest().getQueryParams().get("failure");
+        if (failure != null) {
+            model.put("failure", failure.get(0));
+        }
+        model.put("title", "Login");
+        model.put("username", user.getUsername());
+        response.render(model, "skin.html");
     }
 
     private void doLogin(final Response response) {
@@ -66,50 +57,33 @@ public class LoginPage implements Handler<Response> {
     }
 
     private void doFormLogin(final Response response, Request request) {
-        request.form(new Handler<Map<String, ?>>() {
-            public void handle(Map<String, ?> params) {
-                try {
-                    doLogin(response, params.get("username").toString(), params.get("password").toString());
-                    response.redirect("/");
-                } catch (AuthenticationException e) {
-                    response.redirect("login?failure=" + e.getMessage());
-                }
-            }
-        });
+        Map<String, List<String>> params = request.getForm();
+        try {
+            user.authenticate(params.get("username").get(0), params.get("password").get(0), true);
+            response.redirect("/");
+        } catch (Exception e) {
+            response.redirect("/login?failure=" + e.getMessage());
+        }
     }
 
     private void doJsonLogin(final Response response, Request request) {
-        request.json(new Handler<JsonObject>() {
-            public void handle(JsonObject jsonRequest) {
-                Map<String, Object> jsonResult = new HashMap<>();
-                try {
-                    Subject subject = doLogin(response, jsonRequest.getString("username"), jsonRequest.getString("password"));
-                    jsonResult.put("success", true);
-                    jsonResult.put("username", subject.getPrincipal());
-                    response.renderJson(jsonResult);
-                } catch (AuthenticationException e1) {
-                    jsonResult.put("success", false);
-                    jsonResult.put("failure", e1.getMessage());
-                    response.renderJson(jsonResult);
-                }
-            }
-        });
-    }
+        Map<String, Object> jsonResult = new HashMap<>();
+        @SuppressWarnings("unchecked")
+        Map<String, String> jsonRequest = (Map<String, String>) new JsonSlurper().parseText(request.getText());
 
-    private Subject doLogin(Response response, String username, String password) throws AuthenticationException {
-        AuthenticationToken token = new UsernamePasswordToken(username, password);
-        Subject subject = subjectFactory.create(username, response);
-        JsonObject message = new JsonObject().putString("username", username);
         try {
-            securityManager.login(subject, token);
-            Session session = response.getRequest().getSession();
-            session.put("subject", subject);
-            eventBus.publish("auth.login.success", message);
-        } catch (AuthenticationException e) {
-            eventBus.publish("auth.login.failure", message.putString("failure", e.getMessage()));
-            throw e;
+            String username = jsonRequest.get("username");
+            String password = jsonRequest.get("password");
+            user.authenticate(username, password, true);
+
+            jsonResult.put("success", true);
+            jsonResult.put("username", user.getUsername());
+        } catch (AuthenticationException e1) {
+            jsonResult.put("success", false);
+            jsonResult.put("failure", e1.getMessage());
         }
-        return subject;
+
+        response.text("application/json", JsonOutput.toJson(jsonResult));
     }
 
 }

@@ -1,34 +1,27 @@
 package http;
 
-import org.apache.shiro.mgt.*;
-import org.apache.shiro.mgt.SecurityManager;
-import org.apache.shiro.subject.Subject;
+import org.ratpackframework.Handler;
 import org.ratpackframework.Response;
-import org.ratpackframework.session.Session;
-import org.vertx.java.core.Handler;
+import user.User;
 
+import javax.inject.Inject;
 import java.util.HashMap;
 import java.util.Map;
 
 public class UserPage implements Handler<Response> {
 
-    private final SecurityManager securityManager;
-
-    public UserPage(SecurityManager securityManager) {
-        this.securityManager = securityManager;
-    }
+     @Inject
+     User user;
 
     @Override
     public void handle(Response response) {
-        Session session = response.getRequest().getSession();
-        if (!session.containsKey("subject")) {
+        if (user.getUsername() == null) {
             response.redirect("/");
             return;
         }
 
-        Subject subject = (Subject) session.get("subject");
         Map<String, Object> model = new HashMap<>(1);
-        model.put("subject", subject);
+        model.put("user", user);
         model.put("content", "user.html");
 
         response.render(model, "skin.html");
