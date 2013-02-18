@@ -11,5 +11,5 @@ import user.UserSecurityModule
             new MapSessionsModule(100, 30) <<
             new JsonModule()
 
-    sessionCookie.expiresMins = 0
+    sessionCookie.expiresMins = 0 // session ends when the browser closes
 }
