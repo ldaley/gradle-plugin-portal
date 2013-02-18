@@ -1,0 +1,12 @@
+<div ng-controller="topnav" ng-include="'/partials/common/topnav.html'"></div>
+<div class="container">
+    <div class="row">
+        <div class="span3" ng-controller="leftnav" ng-include="'/partials/common/leftnav.html'">
+        </div>
+        <!--/span-->
+        <div class="span9">
+            <h1>Gradle Plugins</h1>
+            <div class="plugins" ng-controller="plugins" ng-include="'/partials/common/plugins.html'"></div>
+        </div>
+    </div>
+</div>
