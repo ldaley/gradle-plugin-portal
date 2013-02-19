@@ -4,9 +4,9 @@ import com.google.gson.JsonElement;
 import com.google.gson.JsonObject;
 import com.google.gson.JsonParser;
 import com.google.gson.stream.JsonWriter;
-import org.ratpackframework.Handler;
-import org.ratpackframework.Request;
-import org.ratpackframework.Response;
+import org.ratpackframework.app.Request;
+import org.ratpackframework.app.Response;
+import org.ratpackframework.handler.Handler;
 
 import java.io.StringWriter;
 

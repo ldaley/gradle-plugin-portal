@@ -1,7 +1,7 @@
 package app;
 
-import org.ratpackframework.Handler;
-import org.ratpackframework.Response;
+import org.ratpackframework.app.Response;
+import org.ratpackframework.handler.Handler;
 import user.AuthenticatableUser;
 
 import javax.inject.Inject;

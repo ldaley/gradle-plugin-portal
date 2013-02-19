@@ -3,8 +3,8 @@ package user;
 import org.apache.shiro.codec.Base64;
 import org.apache.shiro.crypto.AesCipherService;
 import org.apache.shiro.crypto.CipherService;
-import org.ratpackframework.Request;
-import org.ratpackframework.Response;
+import org.ratpackframework.app.Request;
+import org.ratpackframework.app.Response;
 
 import javax.inject.Inject;
 import java.nio.charset.Charset;

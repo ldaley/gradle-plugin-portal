@@ -2,9 +2,9 @@ package app;
 
 import json.Json;
 import json.JsonBuilder;
-import org.ratpackframework.Handler;
-import org.ratpackframework.Request;
-import org.ratpackframework.Response;
+import org.ratpackframework.app.Request;
+import org.ratpackframework.app.Response;
+import org.ratpackframework.handler.Handler;
 import user.AuthenticatableUser;
 
 import javax.inject.Inject;

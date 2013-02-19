@@ -4,8 +4,8 @@ import com.google.inject.Inject;
 import com.google.inject.servlet.RequestScoped;
 import org.apache.shiro.authc.UsernamePasswordToken;
 import org.apache.shiro.subject.Subject;
-import org.ratpackframework.Request;
-import org.ratpackframework.Response;
+import org.ratpackframework.app.Request;
+import org.ratpackframework.app.Response;
 import org.ratpackframework.session.store.MapSessionStore;
 
 import java.util.concurrent.ConcurrentMap;
