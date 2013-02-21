@@ -50,7 +50,6 @@ define(["angular", "console"], function (angular, console) {
             jasmineEnv.addReporter(new jasmine.ConsoleReporter());
             jasmineEnv.addReporter(new jasmine.BootstrapReporter());
             jasmineEnv.addReporter(new jasmine.JUnitXmlReporter("${junitDirPath}/"));
-            console.log("foo");
             jasmineEnv.execute();
         });
     });

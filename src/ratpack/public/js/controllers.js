@@ -9,7 +9,6 @@ define([
     });
 
     module.controller("login", function ($scope, dialog, $http, currentUser) {
-        $scope.foo = "bar";
         $scope.request = {username: null, password: null, remember: true};
         $scope.requesting = false;
         $scope.failure = null;
