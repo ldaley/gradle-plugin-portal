@@ -3,3 +3,5 @@ build
 .DS_Store
 shiro-spike.i*
 out
+*.db
+*.log
