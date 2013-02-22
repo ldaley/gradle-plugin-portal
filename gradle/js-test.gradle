@@ -1,0 +1,90 @@
+apply plugin: "envjs" // applies javascript plugin
+
+repositories {
+    javaScript.gradle()
+}
+
+javaScript {
+    // We have to patch env.js to work with require.js
+    envJs.js = files("src/test/js/env.rhino.1.2.js")
+}
+
+import org.gradle.plugins.javascript.envjs.browser.*
+check.dependsOn(task('jsTest'))
+
+["unit", "scenario"].each { groupName ->
+    def prepTask = task("jsTest${groupName.capitalize()}Prepare", type: Sync) {
+        ext.dir = file("src/test/js/$groupName")
+        into file("$buildDir/test/js/$groupName")
+        from dir, {
+            eachFile {
+                if (it.file.name == "driver.js") {
+                    it.expand \
+                        tests: fileTree(dir: "$dir/tests", include: "*.js").collect { it.absolutePath - dir.absolutePath - "/" }
+                }
+            }
+        }
+        from "src/test/js/common"
+        from file("$run.workingDir/public"), {
+            // We have to patch require.js to work with env.js
+            eachFile {
+                if (it.name == "require.js") {
+                    it.filter org.apache.tools.ant.filters.ConcatFilter,
+                            append: file("src/test/js/require.load.patch.js")
+                }
+            }
+        }
+    }
+
+    def testTask = task("jsTest${groupName.capitalize()}", type: BrowserEvaluate, dependsOn: prepTask) {
+        ext.prepare = prepTask
+        ext.outputDir = reporting.file("js-test/$groupName")
+        onlyIf { !fileTree("$content/tests").empty }
+        content prepTask.destinationDir
+        result "$outputDir/result.html"
+        resource "tests.html"
+
+        doLast {
+            copy {
+                into outputDir
+                from content
+            }
+        }
+    }
+
+    jsTest.dependsOn testTask
+}
+
+jsTestUnitPrepare {
+    ext.junitDir = reporting.file("js-test/junit/$dir.name")
+    eachFile {
+        if (it.file.name == "driver.js") {
+            it.expand junitDirPath: junitDir.absolutePath
+        }
+    }
+}
+
+jsTestUnit {
+    doFirst {
+        delete prepare.junitDir
+    }
+    doLast {
+        def resultFile = file(result)
+        def driverFile = file("$outputDir/$resource")
+        if (!resultFile.text.contains('0 failures')) {
+            throw new GradleException("There are failing tests.\nSee: ${new org.gradle.logging.ConsoleRenderer().asClickableFileUrl(driverFile)}")
+        }
+    }
+}
+
+jsTestScenarioPrepare {
+    eachFile {
+        if (it.file.name == "index.html") {
+            it.filter { it.replace("bootstrap(document, ['app']);", "bootstrap(document, ['e2eApp']);")}
+        }
+    }
+}
+
+jsTestScenario {
+
+}

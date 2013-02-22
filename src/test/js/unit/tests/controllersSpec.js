@@ -1,14 +1,14 @@
-describe("Controllers - ", function() {
+describe("root controller", function() {
     beforeEach(angular.mock.module('controllers'));
 
     beforeEach(inject(function($rootScope, $controller) {
-        this.rootScope = $rootScope;
+        this.scope = $rootScope.$new();
         $controller('main', {
-            $rootScope: $rootScope
+            $rootScope: this.scope
         });
     }));
 
     it("should set title", function() {
-        expect(this.rootScope.title).toBe("Gradle Plugins");
+        expect(this.scope.title).toBe("Gradle Plugins");
     });
 });

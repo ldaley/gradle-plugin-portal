@@ -8,19 +8,23 @@ buildscript {
   }
 }
 
+task wrapper(type: Wrapper) {
+    gradleVersion = "1.4"
+}
+
 apply plugin: "ratpack"
-apply plugin: "envjs"
+apply plugin: "groovy" // for testing
 
 repositories {
   maven { url "https://oss.sonatype.org/content/repositories/snapshots/" }
   mavenCentral()
   maven { url "http://repo.springsource.org/repo" }
-  javaScript.gradle()
 }
 
 mainClassName = "bootstrap.Main"
 
 apply plugin: "idea"
+
 idea {
     project {
         jdkName "1.7"
@@ -28,9 +32,10 @@ idea {
     }
 }
 
-configurations {
-    jstestdriver
-}
+ext.deps = [
+    groovy: "org.codehaus.groovy:groovy-all:2.1.1",
+    spock: dependencies.create("org.spockframework:spock-core:0.7-groovy-2.0", { exclude module: "groovy-all" })
+]
 
 dependencies {
     springloaded "org.springsource.springloaded:springloaded-core:1.1.1"
@@ -44,71 +49,5 @@ dependencies {
     compile "com.google.code.gson:gson:2.2.2"
 }
 
-
-javaScript{
-    // We have to patch env.js to work with require.js
-    envJs.js = files("src/test/js/harness/test-lib/env.rhino.1.2.js")
-}
-
-import org.gradle.plugins.javascript.envjs.browser.*
-task jsTest
-file("src/test/js/groups").eachDir { File srcDir ->
-    def groupName = srcDir.name
-
-    def junitDir = file("$buildDir/test/js/$groupName-junit")
-
-    def prepTask = task("jsTest${groupName.capitalize()}Prepare", type: Sync) {
-        into file("$buildDir/test/js/$groupName")
-        into "tests", { from srcDir }
-        into "js", {
-            from file("$run.workingDir/public/js")
-
-            // We have to patch require.js to work with env.js
-            eachFile {
-                if (it.file.name == "require.js") {
-                    it.filter org.apache.tools.ant.filters.ConcatFilter,
-                            append: file("src/test/js/harness/test-lib/require.load.patch.js")
-                }
-            }
-        }
-        from "src/test/js/harness", {
-            eachFile {
-                if (it.file.name == "driver.js") {
-                    it.expand \
-                        tests: srcDir.list().findAll { it.endsWith(".js") }.collect { "tests/$it" },
-                        junitDirPath: junitDir.absolutePath
-                }
-            }
-        }
-        doFirst {
-            delete junitDir
-        }
-    }
-
-    def outputDir = reporting.file("js-test/$groupName")
-    def testTask = task("jsTest${groupName.capitalize()}", type: BrowserEvaluate, dependsOn: prepTask) {
-        onlyIf { !fileTree("$content/tests").empty }
-        content prepTask.destinationDir
-        resource "tests.html"
-        result "$outputDir/test-result.html"
-
-        doLast {
-            def spec = copy {
-                into outputDir
-                from content
-            }
-
-            def resultFile = file(result)
-            def driverFile = file("$spec.destinationDir/$resource")
-            if (!resultFile.text.contains('0 failures')) {
-                throw new GradleException("There are failing tests.\nSee: ${new org.gradle.logging.ConsoleRenderer().asClickableFileUrl(driverFile)}")
-            }
-        }
-    }
-
-    jsTest.dependsOn testTask
-}
-
-task wrapper(type: Wrapper) {
-  gradleVersion = "1.4"
-}
+apply from: "gradle/js-test.gradle"
+apply from: "gradle/functional-test.gradle"

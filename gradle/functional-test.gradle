@@ -1,0 +1,21 @@
+sourceSets {
+    functionalTest {
+        task functionalTest(type: Test) {
+            testClassesDir = output.classesDir
+            testSrcDirs = allSource.srcDirs.toList()
+            classpath = runtimeClasspath
+        }
+        idea.module {
+            testSourceDirs += allSource.srcDirs.toList()
+            scopes.TEST.plus += configurations.functionalTestCompile
+        }
+    }
+}
+
+dependencies {
+    functionalTestCompile \
+       "org.gebish:geb-spock:0.9.0-SNAPSHOT",
+        deps.groovy,
+        deps.spock,
+        "org.seleniumhq.selenium:selenium-java:2.29.1"
+}

@@ -1,6 +1,7 @@
-define(["angular", "console"], function (angular, console) {
-    var loadJs = function (url, callback) {
-        callback = callback || function () {};
+(function () {
+    var single = function (url, callback) {
+        callback = callback || function () {
+        };
 
         var script = document.createElement("script");
         script.type = "text/javascript";
@@ -28,30 +29,16 @@ define(["angular", "console"], function (angular, console) {
         }
     };
 
-    var loadJsSet = function (scripts, callback) {
+    window.loadJs = function (scripts, callback) {
         var num = scripts.length;
         var countdown = num;
         for (i = 0; i < num; ++i) {
-            loadJs(scripts[i], function () {
-                console.log(scripts[i] + " done");
+            single(scripts[i], function () {
                 countdown -= 1;
                 if (countdown == 0) {
                     callback();
                 }
             });
         }
-    };
-
-    window.angular = angular;
-
-    loadJsSet(["test-lib/angular.mocks.js"], function () {
-        loadJsSet([${tests.collect { "'$it'" }.join(', ')}], function () {
-            var jasmineEnv = jasmine.getEnv();
-            jasmineEnv.addReporter(new jasmine.ConsoleReporter());
-            jasmineEnv.addReporter(new jasmine.BootstrapReporter());
-            jasmineEnv.addReporter(new jasmine.JUnitXmlReporter("${junitDirPath}/"));
-            jasmineEnv.execute();
-        });
-    });
-
-});
+    }
+})();

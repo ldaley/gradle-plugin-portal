@@ -9,9 +9,9 @@
 
                     </div>
                     <div ng-hide="user.loading">
-                        <button class="btn" ng-show="user.username == null" ng-click="doLogin()">Login</button>
+                        <button class="btn login" ng-show="user.username == null" ng-click="doLogin()">Login</button>
                         <p class="navbar-text" ng-hide="user.username == null">
-                            {{user.username}}
+                            <span id="logged-in-username">{{user.username}}</span>
                             <small>(<button class="btn-link btn-small logout" ng-click="logout()">logout</button></a>)</small>
                         </p>
                     </div>
