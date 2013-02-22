@@ -1,4 +1,4 @@
-package pages
+package content
 
 import geb.Page
 
@@ -13,5 +13,7 @@ class LoginDialog extends Page {
         username { modal.find("#inputUsername") }
         password { modal.find("#inputPassword") }
         signIn { modal.find("button[type=submit]") }
+        errorAlert(wait: true) { modal.find(".alert-error") }
+        errorAlertText { errorAlert.text() }
     }
 }

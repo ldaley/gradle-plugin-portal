@@ -1,8 +1,8 @@
-package pages
+package content
 
 import geb.Page
 
-class FrontPage extends Page {
+class HomePage extends Page {
 
     static at = {
         waitFor { title == "Gradle Plugins" }

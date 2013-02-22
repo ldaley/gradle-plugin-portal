@@ -1,6 +1,6 @@
 import org.openqa.selenium.chrome.ChromeDriver
 
-reportsDir = new File("build/reports/geb-reports")
+reportsDir = new File("geb-reports")
 driver = {
     new ChromeDriver()
 }

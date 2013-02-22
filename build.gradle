@@ -49,5 +49,22 @@ dependencies {
     compile "com.google.code.gson:gson:2.2.2"
 }
 
+idea.module { module ->
+    sourceSets.whenObjectAdded {
+        if (it.name.endsWith("Test")) {
+            module.testSourceDirs += it.allSource.srcDirs.toList()
+            module.scopes.TEST.plus += configurations[it.runtimeConfigurationName]
+        } else {
+            module.sourceDirs += it.allSource.srcDirs.toList()
+            module.scopes.COMPILE.plus += configurations[it.compileConfigurationName]
+            module.scopes.RUNTIME.plus += configurations[it.runtimeConfigurationName]
+            module.scopes.RUNTIME.minus += configurations[it.compileConfigurationName]
+
+        }
+    }
+}
+
 apply from: "gradle/js-test.gradle"
 apply from: "gradle/functional-test.gradle"
+apply from: "gradle/dev.gradle"
+

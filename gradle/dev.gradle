@@ -1,0 +1,13 @@
+sourceSets {
+    dev {}
+}
+
+configurations {
+    devCompile.extendsFrom compile
+    devRuntime.extendsFrom runtime
+}
+
+dependencies {
+    devCompile deps.groovy
+}
+

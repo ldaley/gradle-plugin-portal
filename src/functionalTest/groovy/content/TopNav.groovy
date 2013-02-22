@@ -1,4 +1,4 @@
-package pages
+package content
 
 import geb.Module
 

@@ -14,13 +14,14 @@ import java.io.File;
 public class Main {
 
     public static void main(String[] args) {
-        RatpackServerFactory serverFactory = new RatpackServerFactory(
-                new File(System.getProperty("user.dir")),
-                5050, null, null
-        );
+        new Main().launch(new File(System.getProperty("user.dir")), 5050);
+    }
+
+    public RatpackServer launch(File dir, int port) {
+        RatpackServerFactory serverFactory = new RatpackServerFactory(dir, port, null, null);
 
         RatpackServer server = serverFactory.create(
-                Routes.class, new StaticAssetsConfig(new File("public")),
+                Routes.class, new StaticAssetsConfig(new File(dir, "public")),
                 new UserSecurityModule(),
                 new StoreModule(),
                 new MapSessionsModule(100, 30),
@@ -28,6 +29,7 @@ public class Main {
         );
 
         server.startAndWait();
+        return server;
     }
 
 }
