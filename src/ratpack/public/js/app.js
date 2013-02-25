@@ -18,7 +18,8 @@ require.config({
             exports: '_'
         },
         angular: {
-            exports: "angular"
+            exports: "angular",
+            deps: ['jQuery']
         }
     },
     urlArgs: "bust=" + (new Date()).getTime()
@@ -32,6 +33,7 @@ define([
     module.config(function ($routeProvider) {
         $routeProvider.
             when('/', {templateUrl: "partials/main.html", controller: "main"}).
+            when('/register', {templateUrl: "partials/full.html", controller: "register"}).
             otherwise({redirectTo: '/'});
     });
     angular.bootstrap(document, ['app']);
