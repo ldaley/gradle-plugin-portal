@@ -18,7 +18,7 @@ public class Main {
     }
 
     public RatpackServer launch(File dir, int port) {
-        RatpackServerFactory serverFactory = new RatpackServerFactory(dir, port, null, null);
+        RatpackServerFactory serverFactory = new RatpackServerFactory(port, null, null);
 
         RatpackServer server = serverFactory.create(
                 Routes.class, new StaticAssetsConfig(new File(dir, "public")),

@@ -3,6 +3,7 @@ package app;
 import com.google.gson.JsonObject;
 import json.Json;
 import json.JsonBuilder;
+import org.ratpackframework.app.Endpoint;
 import org.ratpackframework.app.Request;
 import org.ratpackframework.app.Response;
 import org.ratpackframework.handler.Handler;
@@ -10,20 +11,19 @@ import user.AuthenticatableUser;
 
 import javax.inject.Inject;
 
-public class LoginHandler implements Handler<Response> {
+public class LoginEndpoint implements Endpoint {
 
     private final AuthenticatableUser user;
     private final Json json;
 
     @Inject
-    public LoginHandler(AuthenticatableUser user, Json json) {
+    public LoginEndpoint(AuthenticatableUser user, Json json) {
         this.user = user;
         this.json = json;
     }
 
     @Override
-    public void handle(Response response) {
-        Request request = response.getRequest();
+    public void respond(Request request, Response response) {
         if (!request.getContentType().isJson()) {
             response.end(415);
             return;

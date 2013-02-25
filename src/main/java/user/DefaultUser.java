@@ -1,10 +1,10 @@
 package user;
 
 import com.google.inject.Inject;
-import com.google.inject.servlet.RequestScoped;
 import org.apache.shiro.authc.UsernamePasswordToken;
 import org.apache.shiro.subject.Subject;
 import org.ratpackframework.app.Request;
+import org.ratpackframework.app.RequestScoped;
 import org.ratpackframework.app.Response;
 import org.ratpackframework.session.store.MapSessionStore;
 

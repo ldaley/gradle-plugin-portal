@@ -1,22 +1,24 @@
 package app;
 
+import org.ratpackframework.app.Endpoint;
+import org.ratpackframework.app.Request;
 import org.ratpackframework.app.Response;
 import org.ratpackframework.handler.Handler;
 import user.AuthenticatableUser;
 
 import javax.inject.Inject;
 
-public class LogoutHandler implements Handler<Response> {
+public class LogoutEndpoint implements Endpoint {
 
     private final AuthenticatableUser user;
 
     @Inject
-    public LogoutHandler(AuthenticatableUser user) {
+    public LogoutEndpoint(AuthenticatableUser user) {
         this.user = user;
     }
 
     @Override
-    public void handle(Response response) {
+    public void respond(Request request, Response response) {
         if (user.isAuthenticated()) {
             user.logout();
         }
