@@ -73,11 +73,7 @@ public class DefaultUser implements AuthenticatableUser {
     @Override
     public void authenticate(String username, String password, boolean remember) {
         Subject subject = subjectFactory.create(username);
-        try {
-            subject.login(new UsernamePasswordToken(username, password));
-        } catch (AuthenticationException e) {
-            e.printStackTrace();
-        }
+        subject.login(new UsernamePasswordToken(username, password));
         this.username = username;
         this.authenticated = true;
         this.init = true;

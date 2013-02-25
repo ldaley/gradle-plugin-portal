@@ -5,3 +5,4 @@ shiro-spike.i*
 out
 *.db
 *.log
+geb-reports
