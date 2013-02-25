@@ -1,6 +1,7 @@
 package user;
 
 import com.google.inject.Inject;
+import org.apache.shiro.authc.AuthenticationException;
 import org.apache.shiro.authc.UsernamePasswordToken;
 import org.apache.shiro.subject.Subject;
 import org.ratpackframework.app.Request;
@@ -72,7 +73,11 @@ public class DefaultUser implements AuthenticatableUser {
     @Override
     public void authenticate(String username, String password, boolean remember) {
         Subject subject = subjectFactory.create(username);
-        subject.login(new UsernamePasswordToken(username, password));
+        try {
+            subject.login(new UsernamePasswordToken(username, password));
+        } catch (AuthenticationException e) {
+            e.printStackTrace();
+        }
         this.username = username;
         this.authenticated = true;
         this.init = true;

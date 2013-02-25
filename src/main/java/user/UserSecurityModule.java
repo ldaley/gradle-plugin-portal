@@ -1,28 +1,27 @@
 package user;
 
 import com.google.inject.AbstractModule;
+import com.google.inject.Provides;
+import org.apache.shiro.config.Ini;
+import org.apache.shiro.config.IniSecurityManagerFactory;
 import org.apache.shiro.mgt.*;
 import org.apache.shiro.mgt.SecurityManager;
 import org.apache.shiro.realm.SimpleAccountRealm;
 import org.apache.shiro.subject.Subject;
+import org.apache.shiro.util.Factory;
+
+import javax.inject.Singleton;
 
 public class UserSecurityModule extends AbstractModule {
 
+    private final String configFileUrl;
+
+    public UserSecurityModule(String configFileUrl) {
+        this.configFileUrl = configFileUrl;
+    }
+
     @Override
     protected void configure() {
-        SimpleAccountRealm literalRealm = new SimpleAccountRealm();
-        literalRealm.addAccount("user1", "password");
-        literalRealm.addAccount("user2", "password");
-        DefaultSecurityManager securityManager = new DefaultSecurityManager(literalRealm);
-        DefaultSubjectDAO subjectDAO = (DefaultSubjectDAO) securityManager.getSubjectDAO();
-        subjectDAO.setSessionStorageEvaluator(new SessionStorageEvaluator() {
-            @Override
-            public boolean isSessionStorageEnabled(Subject subject) {
-                return false;
-            }
-        });
-
-        bind(SecurityManager.class).toInstance(securityManager);
         bind(SubjectFactory.class);
 
         bind(DefaultUser.class);
@@ -31,6 +30,22 @@ public class UserSecurityModule extends AbstractModule {
 
         bind(UserPersistentIdentityStore.class); // depends on StoreModule
         bind(CookieRememberedIdentityManager.class);
+    }
+
+    @Provides
+    @Singleton
+    SecurityManager provideSecurityManager() {
+        Ini ini = Ini.fromResourcePath(configFileUrl);
+        Factory<SecurityManager> factory = new IniSecurityManagerFactory(ini);
+        DefaultSecurityManager securityManager = (DefaultSecurityManager) factory.getInstance();
+        DefaultSubjectDAO subjectDAO = (DefaultSubjectDAO) securityManager.getSubjectDAO();
+        subjectDAO.setSessionStorageEvaluator(new SessionStorageEvaluator() {
+            @Override
+            public boolean isSessionStorageEnabled(Subject subject) {
+                return false;
+            }
+        });
+        return securityManager;
     }
 
 }

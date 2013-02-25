@@ -22,7 +22,7 @@ public class Main {
 
         RatpackServer server = serverFactory.create(
                 Routes.class, new StaticAssetsConfig(new File(dir, "public")),
-                new UserSecurityModule(),
+                new UserSecurityModule(new File(dir, "config/security.ini").toURI().toString()),
                 new StoreModule(),
                 new MapSessionsModule(100, 30),
                 new JsonModule()
