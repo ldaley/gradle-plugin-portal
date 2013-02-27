@@ -1,7 +1,9 @@
 build
 .gradle
 .DS_Store
-shiro-spike.i*
+*.iml
+*.ipr
+*.iws
 out
 *.db
 *.log

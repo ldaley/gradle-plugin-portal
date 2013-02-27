@@ -34,13 +34,13 @@ public class RegisterEndpoint implements Endpoint {
             registrationResponse.addFieldError("email", "duplicate");
         }
 
-        if (!registrationResponse.isSuccess()) {
+        if (registrationResponse.isSuccess()) {
+            repo.save(registeredUser);
+            response.end();
+        }  else {
             response.setStatus(400);
             json.render(response, registrationResponse);
         }
-
-        registeredUser = repo.save(registeredUser);
-        response.end();
     }
 
     private RegisteredUser toRegisteredUser(RegistrationRequest registrationRequest) {
