@@ -8,15 +8,8 @@ buildscript {
   }
 }
 
-
 apply plugin: "ratpack"
-apply plugin: "groovy" // for testing
 
-repositories {
-  maven { url "https://oss.sonatype.org/content/repositories/snapshots/" }
-  mavenCentral()
-  maven { url "http://repo.springsource.org/repo" }
-}
 
 mainClassName = "bootstrap.Main"
 
@@ -39,22 +32,4 @@ dependencies {
     compile 'org.springframework.data:spring-data-jpa:1.3.0.RELEASE'
 }
 
-idea.module { module ->
-    sourceSets.whenObjectAdded {
-        if (it.name.endsWith("Test")) {
-            module.testSourceDirs += it.allSource.srcDirs.toList()
-            module.scopes.TEST.plus += configurations[it.runtimeConfigurationName]
-        } else {
-            module.sourceDirs += it.allSource.srcDirs.toList()
-            module.scopes.COMPILE.plus += configurations[it.compileConfigurationName]
-            module.scopes.RUNTIME.plus += configurations[it.runtimeConfigurationName]
-            module.scopes.RUNTIME.minus += configurations[it.compileConfigurationName]
-
-        }
-    }
-}
-
 apply from: "gradle/js-test.gradle"
-apply from: "gradle/functional-test.gradle"
-apply from: "gradle/dev.gradle"
-

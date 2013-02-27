@@ -4,8 +4,15 @@ allprojects {
 	ext.deps = [
 	    groovy: "org.codehaus.groovy:groovy-all:2.1.1",
 	    spock: dependencies.create("org.spockframework:spock-core:0.7-groovy-2.0", { exclude module: "groovy-all" })
-	]	
+	]
+
+    repositories {
+        mavenCentral()
+        maven { url "https://oss.sonatype.org/content/repositories/snapshots/" }
+        maven { url "http://repo.springsource.org/repo" }
+    }
 }
+
 
 idea {
     project {

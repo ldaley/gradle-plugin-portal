@@ -1,0 +1,8 @@
+apply plugin: "groovy"
+
+dependencies {
+    compile project(":app-core"),
+            deps.groovy, deps.spock,
+            "org.gebish:geb-spock:0.9.0-SNAPSHOT",
+            "org.seleniumhq.selenium:selenium-chrome-driver:2.29.1"
+}
