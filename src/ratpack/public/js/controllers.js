@@ -8,6 +8,32 @@ define([
         $rootScope.title = "Gradle Plugins";
     });
 
+    module.controller("register", function ($scope, $http) {
+        $scope.contentTemplate = "partials/register.html";
+        $scope.request = {};
+        $scope.response = {};
+        $scope.register = function (form) {
+            function response(data, status, headers, config) {
+                $scope.requesting = false;
+                if (status == 200) {
+                    $location.path("/");
+                }
+                if (data) {
+                    angular.forEach(data.fieldErrors, function (errors, field) {
+                        angular.forEach(errors, function (error, i) {
+                            form[field].$setValidity(error, false);
+                        });
+                    });
+                } else {
+                    $scope.failure = true;
+                }
+            }
+
+            $http.post("/data/register", $scope.request).
+                success(response).error(response);
+        }
+    });
+
     module.controller("login", function ($scope, dialog, $http, currentUser) {
         $scope.request = {username: null, password: null, remember: true};
         $scope.requesting = false;
@@ -43,7 +69,7 @@ define([
         ]
     });
 
-    module.controller("topnav", function ($scope, currentUser, $dialog) {
+    module.controller("topnav", function ($scope, currentUser, $dialog, $location) {
         $scope.projectName = "Gradle Plugins";
         $scope.user = currentUser;
         $scope.nav = [
@@ -53,8 +79,11 @@ define([
             var d = $dialog.dialog({modalFade: true});
             d.open("partials/login.html", "login");
         };
+        $scope.doRegister = function () {
+            $location.path("register");
+        }
 
-        $scope.logout = function() {
+        $scope.logout = function () {
             window.location = "/logout";
         }
     });

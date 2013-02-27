@@ -1,0 +1,54 @@
+<h1>New user registration</h1>
+<p>All fields are required.</p>
+<form class="form-horizontal well" name="form" ng-submit="form.$dirty = true; register(form)" read-only-on="requesting">
+    <div class="alert alert-error" ng-show="response.failure">
+        <strong>Registration failed!</strong><br/>{{response.failure}}
+    </div>
+    <div class="control-group" ng-class="form.username.$valid || 'error'">
+        <label class="control-label" for="inputUsername">Username</label>
+
+        <div class="controls">
+            <input type="text" name="username" id="inputUsername" ng-model="request.username" required>
+            <span class="help-inline" ng-show="form.username.$dirty && form.username.$error.required">This field is required.</span>
+            <span class="help-inline" ng-show="form.username.$dirty && form.username.$error.duplicate">This username is already registered, please choose another.</span>
+        </div>
+    </div>
+    <div class="control-group" ng-class="form.password.$valid || 'error'">
+        <label class="control-label" for="inputPassword">Password</label>
+
+        <div class="controls">
+            <input type="password" name="password" id="inputPassword" ng-model="request.password" required>
+        </div>
+    </div>
+    <div class="control-group" ng-class="form.confirmPassword.$valid || 'error'">
+        <label class="control-label" for="inputConfirmPassword">Confirm Password</label>
+
+        <div class="controls">
+            <input type="password" name="confirmPassword" id="inputConfirmPassword" ng-model="request.passwordConfirm"
+                   required>
+        </div>
+    </div>
+    <div class="control-group" ng-class="form.fullName.$valid || 'error'">
+        <label class="control-label" for="inputFullName">Full Name</label>
+
+        <div class="controls">
+            <input type="text" name="fullName" id="inputFullName" ng-model="request.fullName"
+                   required>
+        </div>
+    </div>
+    <div class="control-group" ng-class="form.email.$valid || 'error'">
+        <label class="control-label" for="inputEmail">Email</label>
+
+        <div class="controls">
+            <input type="email" name="email" id="inputEmail" ng-model="request.email"
+                   required>
+            <span class="help-inline" ng-show="form.email.$dirty && form.email.$error.duplicate">This email address is already registered, please choose another.</span>
+
+        </div>
+    </div>
+    <div class="control-group">
+        <div class="controls">
+            <input type="submit" class="btn btn-primary" ng-disabled="requesting" name="register" value="Register" />
+        </div>
+    </div>
+</form>

@@ -6,10 +6,11 @@
             <div class="nav-collapse collapse">
                 <div class="pull-right">
                     <div ng-show="user.loading">
-
+                        Loading…
                     </div>
                     <div ng-hide="user.loading">
                         <button class="btn login" ng-show="user.username == null" ng-click="doLogin()">Login</button>
+                        <button class="btn login" ng-show="user.username == null" ng-click="doRegister()">Register</button>
                         <p class="navbar-text" ng-hide="user.username == null">
                             <span id="logged-in-username">{{user.username}}</span>
                             <small>(<button class="btn-link btn-small logout" ng-click="logout()">logout</button></a>)</small>

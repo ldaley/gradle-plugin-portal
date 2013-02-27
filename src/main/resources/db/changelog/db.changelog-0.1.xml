@@ -1,0 +1,34 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<databaseChangeLog
+        xmlns="http://www.liquibase.org/xml/ns/dbchangelog"
+        xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+        xsi:schemaLocation="http://www.liquibase.org/xml/ns/dbchangelog
+         http://www.liquibase.org/xml/ns/dbchangelog/dbchangelog-2.0.xsd">
+
+    <changeSet id="init" author="ld">
+        <createTable tableName="REGISTERED_USER">
+            <column name="ID" type="BIGINT" autoIncrement="true">
+                <constraints primaryKey="true" nullable="false"/>
+            </column>
+            <column name="USERNAME" type="varchar(255)">
+                <constraints nullable="false"/>
+            </column>
+            <column name="PASSWORD" type="varchar(255)">
+                <constraints nullable="false"/>
+            </column>
+            <column name="DISPLAY_NAME" type="varchar(255)">
+                <constraints nullable="false"/>
+            </column>
+            <column name="EMAIL" type="varchar(255)">
+                <constraints nullable="false"/>
+            </column>
+        </createTable>
+        <addUniqueConstraint tableName="REGISTERED_USER"
+                             columnNames="USERNAME"
+                             constraintName="UNIQ_REGISTERED_USER_USERNAME"/>
+        <addUniqueConstraint tableName="REGISTERED_USER"
+                             columnNames="EMAIL"
+                             constraintName="UNIQ_REGISTERED_USER_EMAIL"/>
+
+    </changeSet>
+</databaseChangeLog>

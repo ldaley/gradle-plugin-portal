@@ -26,10 +26,10 @@ require.config({
 });
 
 define([
-    'console', 'angular', 'services', 'controllers', "angular.ui/all"
-], function (console, angular, services, controllers, ui) {
+    'console', 'angular', 'services', 'controllers', "directives", "angular.ui/all"
+], function (console, angular) {
     "use strict";
-    var module = angular.module('app', ['controllers', 'services']);
+    var module = angular.module('app', ['controllers', 'services', 'directives']);
     module.config(function ($routeProvider) {
         $routeProvider.
             when('/', {templateUrl: "partials/main.html", controller: "main"}).

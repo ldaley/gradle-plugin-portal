@@ -1,4 +1,4 @@
-package app;
+package user;
 
 import org.ratpackframework.app.Endpoint;
 import org.ratpackframework.app.Request;
